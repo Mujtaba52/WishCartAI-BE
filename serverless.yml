@@ -1,0 +1,24 @@
+service: e-commerce-be
+
+useDotenv: true
+
+plugins:
+  - serverless-offline
+  - serverless-jetpack
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  profile: '673430385992'
+  timeout: 15
+
+functions:
+  main:
+    handler: dist/serverless.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: '{proxy+}'
