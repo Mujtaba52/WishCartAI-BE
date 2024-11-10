@@ -9,7 +9,7 @@ plugins:
 provider:
   name: aws
   runtime: nodejs18.x
-  profile: '673430385992'
+  profile: ${env:AWS_PROFILE_ID}
   timeout: 15
 
 functions:
