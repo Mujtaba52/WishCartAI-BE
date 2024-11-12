@@ -1,0 +1,11 @@
+Resources:
+  MyDBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: "Subnet group for Aurora DB"
+      SubnetIds:
+        - !Ref MySubnet1
+        - !Ref MySubnet2
+      Tags:
+        - Key: Name
+          Value: MyAuroraDBSubnetGroup

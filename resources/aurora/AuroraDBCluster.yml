@@ -1,0 +1,22 @@
+Resources:
+  AuroraDBCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-postgresql
+      EngineMode: serverless
+      DatabaseName: ${env:DB_NAME}
+      MasterUsername: ${env:DB_MASTER_USERNAME_${self:provider.stage}}  # Dynamic username based on stage
+      MasterUserPassword: ${env:DB_MASTER_PASSWORD_${self:provider.stage}}  # Dynamic password based on stage
+      ScalingConfiguration:
+        AutoPause: true
+        MinCapacity: 2
+        MaxCapacity: 4
+      VpcSecurityGroupIds:
+        - !Ref AuroraSecurityGroup
+      DBSubnetGroupName: !Ref MyDBSubnetGroup
+
+Outputs:
+  AuroraDBClusterArn:
+    Value: !GetAtt AuroraDBCluster.DBClusterArn
+    Export:
+      Name: AuroraDBClusterArn
