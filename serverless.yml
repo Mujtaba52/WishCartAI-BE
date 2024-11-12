@@ -10,7 +10,12 @@ provider:
   name: aws
   runtime: nodejs18.x
   profile: ${env:AWS_PROFILE_ID}
+  stage: ${opt:stage, 'dev'}
   timeout: 15
+  environment:
+    DB_CLUSTER_ARN: ${cf:e-commerce-db-${self:provider.stage}.AuroraDBClusterArn}
+    DB_SECRET_ARN: ${cf:e-commerce-db-${self:provider.stage}.DBSecretArn}
+    DB_NAME: ${env:DB_NAME}
 
 functions:
   main:
@@ -22,3 +27,8 @@ functions:
       - http:
           method: ANY
           path: '{proxy+}'
+
+resources:
+  - ${file(resources/networking/VPC.yml)}
+  - ${file(resources/networking/Subnets.yml)}
+  - ${file(resources/networking/SecurityGroup.yml)}
