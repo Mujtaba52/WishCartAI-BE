@@ -21,16 +21,14 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },
-  
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Categories');
   }

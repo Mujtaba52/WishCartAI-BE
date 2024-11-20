@@ -36,12 +36,15 @@ module.exports = {
       phone_number: {
         type: Sequelize.STRING
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        type: Sequelize.DATE
       },
-      deleted_at: {
+      updatedAt: {
+        allowNull: true,
+        type: Sequelize.DATE
+      },
+      deletedAt: {
         allowNull: true,
         type: Sequelize.DATE
       }
