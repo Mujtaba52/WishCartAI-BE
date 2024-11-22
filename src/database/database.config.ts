@@ -21,10 +21,9 @@ export const databaseConfig: IDBConfig = {
     dialect: process.env.DB_DIALECT,
     dialectOptions: {
       ssl: {
-          require: true,
-          rejectUnauthorized: false
-      }
-
-  }
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
   },
 };
