@@ -6,13 +6,11 @@ import {
   PrimaryKey,
   AutoIncrement,
   Unique,
-  Default,
   AllowNull,
   CreatedAt,
   DeletedAt,
   Scopes,
 } from 'sequelize-typescript';
-
 
 @Scopes(() => ({}))
 @Table({
