@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Product } from './entities/product.entity';
+import { GetProductsQueryDto } from './dto/get-products.dto';
 
 @Injectable()
 export class ProductsService {
@@ -8,8 +10,21 @@ export class ProductsService {
     return 'This action adds a new product';
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async findAll(getProductsQueryDto: GetProductsQueryDto) {
+    const { page = 1, limit = 50, category } = getProductsQueryDto;
+    const offset = (page - 1) * limit;
+    let categoryFilter = {};
+
+    if (category) {
+      categoryFilter = {category};
+    }
+
+    return await Product.findAll({
+      where : { ...categoryFilter },
+      limit,
+      offset,
+      raw: true,
+    });
   }
 
   findOne(id: number) {
