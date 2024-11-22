@@ -25,6 +25,12 @@ export class Product extends Model<Product> {
   @Column(DataType.TEXT)
   description: string;
 
+  @Column(DataType.STRING)
+  thumbnail_url: string;
+
+  @Column(DataType.FLOAT)
+  price: string;
+
   @CreatedAt
   @Column({ type: DataType.DATE, allowNull: false })
   createdAt: Date;
