@@ -18,6 +18,15 @@ module.exports = {
       description: {
         type: Sequelize.TEXT
       },
+      thumbnailUrl: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      price:{
+        type: Sequelize.FLOAT,
+        allowNull: false,
+        defaultValue: 0.0,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
