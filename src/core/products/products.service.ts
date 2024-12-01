@@ -3,7 +3,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 import { GetProductsQueryDto } from './dto/get-products.dto';
-import Sequelize, { FindOptions, Options } from 'sequelize';
+import Sequelize, { FindOptions, Op, Options } from 'sequelize';
 import { ProductImages } from 'src/common/entities/productImages.entity';
 import { ProductCategory } from 'src/common/entities/productCategory.entity';
 import { Category } from '../category/entities/category.entity';
@@ -15,12 +15,16 @@ export class ProductsService {
   }
 
   async findAll(getProductsQueryDto: GetProductsQueryDto) {
-    const { page = 1, limit = 50, category } = getProductsQueryDto;
+    const { page = 1, limit = 50, category, name } = getProductsQueryDto;
     const offset = (page - 1) * limit;
     let categoryFilter = {};
-
+    let nameFilter = {};
     if (category) {
       categoryFilter = {name :category};
+    }
+
+    if (name) {
+      nameFilter = {name : { [Op.like]: `%${name}%` }};
     }
 
     const result = await Product.findAndCountAll({
@@ -45,6 +49,7 @@ export class ProductsService {
           where : { ...categoryFilter }
         }]
       }],
+      where : { ...nameFilter},
       limit,
       offset,
       raw: true,
