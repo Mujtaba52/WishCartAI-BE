@@ -1,25 +1,65 @@
-service: e-commerce-be
+# service: e-commerce-be
+
+# useDotenv: true
+
+# plugins:
+#   - serverless-offline
+#   - serverless-jetpack
+
+# provider:
+#   name: aws
+#   runtime: nodejs18.x
+#   profile: ${env:AWS_PROFILE_ID}
+#   stage: ${opt:stage, 'dev'}
+#   timeout: 15
+#   environment:
+#     DB_CLUSTER_ARN: ${cf:e-commerce-db-${self:provider.stage}.AuroraDBClusterArn}
+#     DB_SECRET_ARN: ${cf:e-commerce-db-${self:provider.stage}.DBSecretArn}
+#     DB_NAME: ${env:DB_NAME}
+
+# functions:
+#   main:
+#     handler: dist/serverless.handler
+#     events:
+#       - http:
+#           method: ANY
+#           path: /
+#       - http:
+#           method: ANY
+#           path: '{proxy+}'
+
+# resources:
+#   - ${file(resources/networking/VPC.yml)}
+#   - ${file(resources/networking/Subnets.yml)}
+#   - ${file(resources/networking/SecurityGroup.yml)}
+service: application-stack
 
 useDotenv: true
 
 plugins:
   - serverless-offline
   - serverless-jetpack
-
 provider:
   name: aws
   runtime: nodejs18.x
   profile: ${env:AWS_PROFILE_ID}
   stage: ${opt:stage, 'dev'}
-  timeout: 15
+  timeout: 30
   environment:
-    DB_CLUSTER_ARN: ${cf:e-commerce-db-${self:provider.stage}.AuroraDBClusterArn}
-    DB_SECRET_ARN: ${cf:e-commerce-db-${self:provider.stage}.DBSecretArn}
+    DB_CLUSTER_ARN: ${cf:aurora-stack-${self:provider.stage}.AuroraDBClusterArn}
+    DB_SECRET_ARN: ${cf:aurora-stack-${self:provider.stage}.DBSecretArn}
     DB_NAME: ${env:DB_NAME}
+    #AWS_REGION: us-east-1
 
 functions:
   main:
     handler: dist/serverless.handler
+    vpc:
+      securityGroupIds:
+        - ${cf:networking-stack-${self:provider.stage}.LambdaSecurityGroupId}
+      subnetIds:
+        - ${cf:networking-stack-${self:provider.stage}.Subnet1Id}
+        - ${cf:networking-stack-${self:provider.stage}.Subnet2Id}
     events:
       - http:
           method: ANY
@@ -27,8 +67,7 @@ functions:
       - http:
           method: ANY
           path: '{proxy+}'
-
-resources:
-  - ${file(resources/networking/VPC.yml)}
-  - ${file(resources/networking/Subnets.yml)}
-  - ${file(resources/networking/SecurityGroup.yml)}
+  migrate:
+    handler: dist/serverless.migrate
+    description: Run database migrations
+    timeout: 60
