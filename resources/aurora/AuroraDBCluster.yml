@@ -5,18 +5,60 @@ Resources:
       Engine: aurora-postgresql
       EngineMode: serverless
       DatabaseName: ${env:DB_NAME}
-      MasterUsername: ${env:DB_MASTER_USERNAME_${self:provider.stage}}  # Dynamic username based on stage
-      MasterUserPassword: ${env:DB_MASTER_PASSWORD_${self:provider.stage}}  # Dynamic password based on stage
+      MasterUsername: ${env:DB_MASTER_USERNAME_${self:provider.stage}}
+      MasterUserPassword: ${env:DB_MASTER_PASSWORD_${self:provider.stage}}
       ScalingConfiguration:
         AutoPause: true
         MinCapacity: 2
         MaxCapacity: 4
       VpcSecurityGroupIds:
-        - !Ref AuroraSecurityGroup
+        - !ImportValue MyAuroraSecurityGroup-SecurityGroupId
       DBSubnetGroupName: !Ref MyDBSubnetGroup
+
+
+  # Define Aurora Security Group
+  # AuroraSecurityGroup:
+  #   Type: AWS::EC2::SecurityGroup
+  #   Properties:
+  #     GroupDescription: "Security group for Aurora Serverless DB"
+  #     VpcId: !Ref MyVPC
+  #     SecurityGroupIngress:
+  #       - IpProtocol: tcp
+  #         FromPort: 5432
+  #         ToPort: 5432
+  #         SourceSecurityGroupId: sg-06ea95178e56e21e
+  #     Tags:
+  #       - Key: Name
+  #         Value: AuroraSecurityGroup
+
+  # Define RDS Proxy
+  AuroraDBProxy:
+    Type: AWS::RDS::DBProxy
+    Properties:
+      DBProxyName: !Sub "${self:service}-${self:provider.stage}-db-proxy"
+      EngineFamily: POSTGRESQL
+      Auth:
+        - AuthScheme: SECRETS
+          SecretArn: !Ref DBClusterSecret
+          IAMAuth: DISABLED
+      RequireTLS: true
+      RoleArn: !ImportValue AuroraDBProxyRoleArn-${self:provider.stage} # Use the role here
+      VpcSubnetIds:
+        - !ImportValue MyAuroraVPC-Subnet1Id
+        - !ImportValue MyAuroraVPC-Subnet2Id
+      VpcSecurityGroupIds:
+        - !ImportValue MyAuroraSecurityGroup-SecurityGroupId
 
 Outputs:
   AuroraDBClusterArn:
     Value: !GetAtt AuroraDBCluster.DBClusterArn
     Export:
-      Name: AuroraDBClusterArn
+      Name: ${self:service}-${self:provider.stage}-AuroraDBClusterArn
+  DBProxyArn:
+    Value: !Ref AuroraDBProxy
+    Export:
+      Name: ${self:service}-${self:provider.stage}-AuroraDBProxyArn
+  DBSecretArn:
+    Value: !Ref DBClusterSecret
+    Export:
+      Name: ${self:service}-${self:provider.stage}-DBSecretArn

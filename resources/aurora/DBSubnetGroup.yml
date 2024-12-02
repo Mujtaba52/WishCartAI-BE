@@ -4,8 +4,8 @@ Resources:
     Properties:
       DBSubnetGroupDescription: "Subnet group for Aurora DB"
       SubnetIds:
-        - !Ref MySubnet1
-        - !Ref MySubnet2
+        - !ImportValue MyAuroraVPC-Subnet1Id
+        - !ImportValue MyAuroraVPC-Subnet2Id
       Tags:
         - Key: Name
           Value: MyAuroraDBSubnetGroup
