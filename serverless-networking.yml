@@ -1,0 +1,32 @@
+service: networking-stack
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  profile: ${env:AWS_PROFILE_ID}
+  stage: ${opt:stage, 'dev'}
+
+resources:
+  # - ${file(resources/networking/VPC.yml)}
+  - ${file(resources/networking/Subnets.yml)}
+  - ${file(resources/networking/SecurityGroup.yml)}
+  - ${file(resources/networking/LambdaSecurityGroup.yml)}
+  - ${file(resources/networking/IAMRoles.yml)}
+
+# outputs:
+#   VPCId:
+#     Value: !Ref MyVPC
+#     Export:
+#       Name: VPCId-${self:provider.stage}
+#   Subnet1Id:
+#     Value: !Ref MySubnet1
+#     Export:
+#       Name: Subnet1Id-${self:provider.stage}
+#   Subnet2Id:
+#     Value: !Ref MySubnet2
+#     Export:
+#       Name: Subnet2Id-${self:provider.stage}
+#   LambdaSecurityGroupId:
+#     Value: !Ref LambdaSecurityGroup
+#     Export:
+#       Name: LambdaSecurityGroupId-${self:provider.stage}
