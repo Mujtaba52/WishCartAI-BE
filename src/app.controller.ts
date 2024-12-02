@@ -9,4 +9,10 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  @Get('/mig')
+  async runMig(): Promise<string> {
+    await this.appService.runMigrations();
+    return "Migration Successful"
+  }
 }
