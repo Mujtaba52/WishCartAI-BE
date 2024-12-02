@@ -1,0 +1,27 @@
+Resources:
+  AuroraDBProxyRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - rds.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: AuroraDBProxyPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - rds-db:connect
+                Resource: "*"
+Outputs:
+  AuroraDBProxyRoleArn:
+    Value: !GetAtt AuroraDBProxyRole.Arn
+    Export:
+      Name: AuroraDBProxyRoleArn-${self:provider.stage}

@@ -8,3 +8,9 @@ Resources:
       Tags:
         - Key: Name
           Value: MyAuroraVPC
+
+Outputs:
+  VPCId:
+    Value: !Ref MyVPC
+    Export:
+      Name: MyAuroraVPC-VPCId

@@ -2,7 +2,7 @@ Resources:
   MySubnet1:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref MyVPC
+      VpcId: !ImportValue MyAuroraVPC-VPCId
       CidrBlock: 10.0.1.0/24
       AvailabilityZone: !Select [0, !GetAZs '']
       MapPublicIpOnLaunch: true
@@ -13,10 +13,20 @@ Resources:
   MySubnet2:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref MyVPC
+      VpcId: !ImportValue MyAuroraVPC-VPCId
       CidrBlock: 10.0.2.0/24
       AvailabilityZone: !Select [1, !GetAZs '']
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
           Value: MyAuroraSubnet2
+
+Outputs:
+  Subnet1Id:
+    Value: !Ref MySubnet1
+    Export:
+      Name: MyAuroraVPC-Subnet1Id
+  Subnet2Id:
+    Value: !Ref MySubnet2
+    Export:
+      Name: MyAuroraVPC-Subnet2Id

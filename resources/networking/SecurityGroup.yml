@@ -3,12 +3,18 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: "Security group for Aurora Serverless DB"
-      VpcId: !Ref MyVPC
+      VpcId: !ImportValue MyAuroraVPC-VPCId
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 5432
           ToPort: 5432
-          CidrIp: 0.0.0.0/0 # Allows connections from any IP address to port 5432
+          CidrIp: 0.0.0.0/0   #allows all connections
       Tags:
         - Key: Name
           Value: MyAuroraSecurityGroup
+
+Outputs:
+  SecurityGroupId:
+    Value: !Ref AuroraSecurityGroup
+    Export:
+      Name: MyAuroraSecurityGroup-SecurityGroupId
