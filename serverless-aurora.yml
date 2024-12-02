@@ -1,4 +1,30 @@
-service: e-commerce-db
+# service: e-commerce-db
+
+# provider:
+#   name: aws
+#   runtime: nodejs18.x
+#   profile: ${env:AWS_PROFILE_ID}
+#   stage: ${opt:stage, 'dev'}
+
+# resources:
+#   - ${file(resources/networking/VPC.yml)}
+#   - ${file(resources/networking/Subnets.yml)}
+#   - ${file(resources/networking/SecurityGroup.yml)}
+#   - ${file(resources/aurora/AuroraDBCluster.yml)}
+#   - ${file(resources/aurora/DBClusterSecret.yml)}
+#   - ${file(resources/aurora/DBSubnetGroup.yml)}
+
+# outputs:
+#   AuroraDBClusterArn:
+#     Value: !GetAtt AuroraDBCluster.DBClusterArn
+#     Export:
+#       Name: ${self:service}-${self:provider.stage}-AuroraDBClusterArn
+#   DBSecretArn:
+#     Value: !Ref DBClusterSecret
+#     Export:
+#       Name: ${self:service}-${self:provider.stage}-DBSecretArn
+
+service: aurora-stack
 
 provider:
   name: aws
@@ -7,9 +33,6 @@ provider:
   stage: ${opt:stage, 'dev'}
 
 resources:
-  - ${file(resources/networking/VPC.yml)}
-  - ${file(resources/networking/Subnets.yml)}
-  - ${file(resources/networking/SecurityGroup.yml)}
   - ${file(resources/aurora/AuroraDBCluster.yml)}
   - ${file(resources/aurora/DBClusterSecret.yml)}
   - ${file(resources/aurora/DBSubnetGroup.yml)}
@@ -18,8 +41,8 @@ outputs:
   AuroraDBClusterArn:
     Value: !GetAtt AuroraDBCluster.DBClusterArn
     Export:
-      Name: ${self:service}-${self:provider.stage}-AuroraDBClusterArn
+      Name: AuroraDBClusterArn-${self:provider.stage}
   DBSecretArn:
     Value: !Ref DBClusterSecret
     Export:
-      Name: ${self:service}-${self:provider.stage}-DBSecretArn
+      Name: DBSecretArn-${self:provider.stage}
