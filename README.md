@@ -1,73 +1,69 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# E-commerce Backend with NestJS + TypeScript
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project is a backend service for an e-commerce application, built using **NestJS** and **TypeScript**. It is designed to handle core backend functionalities such as user management, product management, and order processing, ensuring robust and scalable performance.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Key Features
 
-## Description
+- **NestJS Framework**: A progressive Node.js framework for building efficient and scalable server-side applications.
+- **Sequelize ORM**: For interacting with relational databases.
+- **TypeScript**: Enhances code quality and maintainability.
+- **Validation**: Request validation with `class-validator` and `class-transformer`.
+- **Environment Configuration**: Managed using the `dotenv` package.
+- **Database Migrations**: Uses Sequelize CLI to handle migrations and seeders.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Installation
+## ⚡️ Quick Install
+
+### Run the Project Locally
 
 ```bash
-$ npm install
+# Clone the repository
+git clone https://github.com/your-repo/ecommerce-be.git
+
+# Navigate to the project directory
+cd ecommerce-be
+
+# Install the dependencies
+npm install
+
+# Set up the environment variables in a `.env` file at the root
+# Example environment variables:
+echo "NODE_ENV=production
+
+# Database Configuration
+DB_USER=your_db_user
+DB_PASSWORD=your_db_password
+DB_NAME_PRODUCTION=your_production_db_name
+DB_HOST=your_db_host
+DB_PORT=your_db_port
+DB_DIALECT=postgres
+
+DB_NAME_LOCAL=your_local_db_name
+" > .env
+
+# Run database migrations to add models to the database
+npx sequelize-cli db:migrate
+
+# Optionally, run the seeders to add dummy data
+npx sequelize-cli db:seed:all
+
+# Start the development server
+npm run start:dev
 ```
 
-## Running the app
-
+### Run the Project on Production
 ```bash
-# development
-$ npm run start
+# Build the application
+npm run build
 
-# watch mode
-$ npm run start:dev
+# Run database migrations to ensure all models are added to the database
+npx sequelize-cli db:migrate
 
-# production mode
-$ npm run start:prod
+# Start the production server
+npm run start:prod
 ```
 
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+## 📖 Documentation
+### Project Description
+This e-commerce backend service powers the core functionalities of an e-commerce platform. It includes features such as retrieving a product list with filters like category and pagination, as well as fetching detailed product information. Built with scalability and modularity in mind, this service is designed to support future enhancements like integration with advanced AI-based features. This backend serves as the foundation for a larger e-commerce ecosystem and ensures a seamless shopping experience for users.
