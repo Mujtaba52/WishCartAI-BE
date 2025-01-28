@@ -10,10 +10,6 @@ import { Category } from '../category/entities/category.entity';
 
 @Injectable()
 export class ProductsService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
-  }
-
   async findAll(getProductsQueryDto: GetProductsQueryDto) {
     const { page = 1, limit = 50, category, name } = getProductsQueryDto;
     const offset = (page - 1) * limit;
