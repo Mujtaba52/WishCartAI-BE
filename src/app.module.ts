@@ -5,9 +5,10 @@ import { UsersModule } from './core/users/users.module';
 import { ProductsModule } from './core/products/products.module';
 import { DatabaseModule } from './database/database.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { AiModule } from './core/ai/ai.module';
 
 @Module({
-  imports: [UsersModule, ProductsModule, DatabaseModule],
+  imports: [UsersModule, ProductsModule, DatabaseModule, AiModule],
   controllers: [AppController],
   providers: [
     AppService,
