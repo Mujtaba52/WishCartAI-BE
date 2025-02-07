@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { AiService } from './ai.service';
 import { CreateAiDto } from './dto/create-ai.dto';
 import { UpdateAiDto } from './dto/update-ai.dto';
@@ -12,10 +12,14 @@ export class AiController {
     return this.aiService.create(createAiDto);
   }
 
-  @Get()
-  findAll() {
-    return this.aiService.findAll();
-  }
+  @Get('chat')
+  async aiChat(@Query('query') query: string) {
+      if (!query) {
+        return { error: "Query string cannot be empty" };
+      }
+      const results = await this.aiService.aiChat(query);
+      return { results };
+    }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
