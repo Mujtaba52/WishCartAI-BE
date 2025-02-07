@@ -7,12 +7,13 @@ import Sequelize, { FindOptions, Op, Options } from 'sequelize';
 import { ProductImages } from 'src/common/entities/productImages.entity';
 import { ProductCategory } from 'src/common/entities/productCategory.entity';
 import { Category } from '../category/entities/category.entity';
-
+import { Pinecone } from '@pinecone-database/pinecone';
+import { OpenAIEmbeddings } from '@langchain/openai';
+import { AiService } from '../ai/ai.service';
 @Injectable()
 export class ProductsService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
-  }
+
+  constructor(private readonly aiService: AiService) {} // Inject AiService
 
   async findAll(getProductsQueryDto: GetProductsQueryDto) {
     const { page = 1, limit = 50, category, name } = getProductsQueryDto;
@@ -73,6 +74,56 @@ export class ProductsService {
     const product = (await Product.findOne(option)).toJSON();
     const { productImages, ...rest } = product;
     return {...rest, images: productImages.map((_)=>_.imageUrl) }
+  }
+  async generateProductEmbeddings() {
+    // Use `aiService.embedding` and `aiService.pinecone`
+    const products = await Product.findAll({
+      attributes: ['id', 'name', 'description', 'price', 'thumbnailUrl', 'createdAt'],
+      include: [{
+        model: ProductCategory,
+        as: 'productCategory',
+        attributes: [],
+        include: [{
+          model: Category,
+          as: 'category',
+          attributes: [['name', 'name']],
+        }],
+      }],
+      raw: true,
+    });
+
+    const index = this.aiService.pinecone.Index("exclusive-index"); // Use AiService's Pinecone instance
+    const batchSize = 10;
+    const vectors = [];
+
+    for (let i = 0; i < products.length; i += batchSize) {
+      const batch = products.slice(i, i + batchSize);
+      const textsToEmbed = batch.map(product => 
+        `Product Name: ${product.name}. Description: ${product.description}. Price: $${product.price}`
+      );
+
+      // Use AiService's embedding instance
+      const embeddings = await this.aiService.embedding.embedDocuments(textsToEmbed);
+
+      embeddings.forEach((vector, index) => {
+        const product = batch[index];
+        vectors.push({
+          id: product.id.toString(),
+          values: vector,
+          metadata: {
+            name: product.name,
+            price: product.price,
+            thumbnailUrl: product.thumbnailUrl,
+            createdAt: product.createdAt,
+            category: product['category.name'],
+          },
+        });
+      });
+    }
+
+    await index.upsert(vectors); // Upsert using Pinecone instance
+
+    return { message: "Embeddings generated and stored successfully!" };
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {

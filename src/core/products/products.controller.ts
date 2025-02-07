@@ -17,10 +17,6 @@ import { GetProductsQueryDto } from './dto/get-products.dto';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
-  }
 
   @Get()
   async findAll(@Query() query: GetProductsQueryDto) {
@@ -30,6 +26,11 @@ export class ProductsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productsService.findOne({ where : {id:+id}});
+  }
+
+  @Post('/generate-embeddings')
+  async generateEmbeddings() {
+  return await this.productsService.generateProductEmbeddings();
   }
 
   @Patch(':id')
