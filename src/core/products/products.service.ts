@@ -7,13 +7,12 @@ import Sequelize, { FindOptions, Op, Options } from 'sequelize';
 import { ProductImages } from 'src/common/entities/productImages.entity';
 import { ProductCategory } from 'src/common/entities/productCategory.entity';
 import { Category } from '../category/entities/category.entity';
-import { Pinecone } from '@pinecone-database/pinecone';
-import { OpenAIEmbeddings } from '@langchain/openai';
-import { AiService } from '../ai/ai.service';
+import { AiService } from '../ai/services/ai.service';
+import { PineconeService } from '../ai/services/pinecone.service';
 @Injectable()
 export class ProductsService {
 
-  constructor(private readonly aiService: AiService) {} // Inject AiService
+  constructor(private readonly aiService: AiService, private readonly pineconeService: PineconeService) {} // Inject AiService
 
   async findAll(getProductsQueryDto: GetProductsQueryDto) {
     const { page = 1, limit = 50, category, name } = getProductsQueryDto;
@@ -92,7 +91,6 @@ export class ProductsService {
       raw: true,
     });
 
-    const index = this.aiService.pinecone.Index("exclusive-index"); // Use AiService's Pinecone instance
     const batchSize = 10;
     const vectors = [];
 
@@ -103,7 +101,7 @@ export class ProductsService {
       );
 
       // Use AiService's embedding instance
-      const embeddings = await this.aiService.embedding.embedDocuments(textsToEmbed);
+      const embeddings = await this.pineconeService.generateEmbedding(textsToEmbed);
 
       embeddings.forEach((vector, index) => {
         const product = batch[index];
@@ -121,7 +119,7 @@ export class ProductsService {
       });
     }
 
-    await index.upsert(vectors); // Upsert using Pinecone instance
+    await this.pineconeService.createVectors(vectors); 
 
     return { message: "Embeddings generated and stored successfully!" };
   }
