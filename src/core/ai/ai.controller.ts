@@ -1,7 +1,8 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
-import { AiService } from './ai.service';
+import { AiService } from './services/ai.service';
 import { CreateAiDto } from './dto/create-ai.dto';
 import { UpdateAiDto } from './dto/update-ai.dto';
+import { ChatDto } from './dto/ai-chat.dto';
 
 @Controller('ai')
 export class AiController {
@@ -13,11 +14,8 @@ export class AiController {
   }
 
   @Get('chat')
-  async aiChat(@Query('query') query: string) {
-      if (!query) {
-        return { error: "Query string cannot be empty" };
-      }
-      const results = await this.aiService.aiChat(query);
+  async aiChat(@Query() chatDto: ChatDto) {
+      const results = await this.aiService.aiChat(chatDto.query);
       return { results };
     }
 
